@@ -1,0 +1,10 @@
+// A custom error that carries an HTTP status code.
+export class ApiError extends Error {
+  public readonly statusCode: number;
+
+  constructor(statusCode: number, message: string) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = "ApiError";
+  }
+}
