@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum RunStatus {
+  SUCCESS
+  FAILED
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(STUDENT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  programs    Program[]
+  runs        CompilationRun[]
+  submissions ExerciseSubmission[]
+  progress    LessonProgress[]
+}
+
+model Program {
+  id         String   @id @default(cuid())
+  title      String
+  sourceCode String
+  userId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  runs CompilationRun[]
+
+  @@index([userId])
+}
+
+model CompilationRun {
+  id               String    @id @default(cuid())
+  programId        String?
+  userId           String
+  sourceCode       String
+  status           RunStatus
+  tokens           Json?
+  syntaxTree       Json?
+  symbolTable      Json?
+  intermediateCode Json?
+  optimizedCode    Json?
+  targetCode       Json?
+  errors           Json?
+  createdAt        DateTime  @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program Program? @relation(fields: [programId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([programId])
+}
+
+model Lesson {
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  content     String
+  category    String
+  difficulty  Difficulty @default(BEGINNER)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  progress LessonProgress[]
+
+  @@index([category])
+}
+
+model Exercise {
+  id              String     @id @default(cuid())
+  title           String
+  description     String
+  instructions    String
+  starterCode     String
+  expectedConcept String
+  difficulty      Difficulty @default(BEGINNER)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  submissions ExerciseSubmission[]
+}
+
+model ExerciseSubmission {
+  id          String   @id @default(cuid())
+  userId      String
+  exerciseId  String
+  sourceCode  String
+  result      Json
+  submittedAt DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@index([userId, exerciseId])
+}
+
+// Added beyond your field list so the dashboard can show "completed lessons".
+model LessonProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  lessonId    String
+  completedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+}
