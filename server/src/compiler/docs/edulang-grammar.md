@@ -37,3 +37,10 @@ semantic analyzer. Programs are never executed with eval().
 ## Limitations
 No loops, functions, arrays, input, `&&`, `||` or `!`. The compiler analyses programs and
 shows educational target code. It does not run them or produce machine code.
+
+## Additional syntax messages (added in Phase 6)
+- `Unexpected end of input.`
+- `Expression is nested too deeply.` (more than 200 levels of nesting)
+- A missing `;` is reported at the end of the previous token.
+- Syntax recovery: after an error the parser skips to the next statement, so several
+  syntax errors can be reported in one run.
