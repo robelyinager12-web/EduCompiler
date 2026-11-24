@@ -44,3 +44,10 @@ shows educational target code. It does not run them or produce machine code.
 - A missing `;` is reported at the end of the previous token.
 - Syntax recovery: after an error the parser skips to the next statement, so several
   syntax errors can be reported in one run.
+
+## Semantic analysis notes (added in Phase 7)
+- The initializer is checked before the variable is declared, so `int x = x;` is an error.
+- A variable stays declared after a type error in its initializer, to avoid follow-up noise.
+- An expression that already reported an error produces no further errors.
+- The symbol table `Value` column is the constant initializer, or empty if it is not constant.
+- Warnings do not stop compilation. Errors do.
