@@ -60,3 +60,12 @@ shows educational target code. It does not run them or produce machine code.
 - A declaration without a value generates no instruction.
 - Every instruction records its result type. For `/`, a result type of int means integer division.
 - TAC is only generated for programs with no lexical, syntax or semantic errors.
+
+## Optimization notes (added in Phase 9)
+- Constant propagation replaces a variable or temporary with its known constant value.
+- Constant folding computes operations on constants at compile time.
+- Dead code elimination removes unused temporaries and assignments that are overwritten before use.
+- The final value of every variable is kept, because it is part of the program's result.
+- Integer division truncates toward zero. Folding is skipped for division by zero and for
+  integer overflow, so program behavior never changes.
+- Every change is recorded as a step with a before/after line and an explanation.

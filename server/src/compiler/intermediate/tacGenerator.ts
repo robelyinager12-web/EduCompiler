@@ -162,8 +162,11 @@ class Generator {
 
   // ---------- Helpers ----------
 
-  private newTemp(): string {
-    this.tempCount++;
+   private newTemp(): string {
+    // Skip names the student already uses, e.g. a variable called t1.
+    do {
+      this.tempCount++;
+    } while (this.types.has(`t${this.tempCount}`));
     return `t${this.tempCount}`;
   }
 
