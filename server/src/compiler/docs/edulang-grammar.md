@@ -51,3 +51,12 @@ shows educational target code. It does not run them or produce machine code.
 - An expression that already reported an error produces no further errors.
 - The symbol table `Value` column is the constant initializer, or empty if it is not constant.
 - Warnings do not stop compilation. Errors do.
+
+## Intermediate code notes (added in Phase 8)
+- Three-Address Code (TAC): each instruction has at most one operation.
+- A declaration or assignment computes its value into a temporary (`t1 = 10`), then assigns it (`a = t1`).
+- Variables and constants are used directly inside operations: `t3 = a + b`.
+- `print` uses its operand directly. Expressions go through a temporary first.
+- A declaration without a value generates no instruction.
+- Every instruction records its result type. For `/`, a result type of int means integer division.
+- TAC is only generated for programs with no lexical, syntax or semantic errors.
