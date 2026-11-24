@@ -69,3 +69,11 @@ shows educational target code. It does not run them or produce machine code.
 - Integer division truncates toward zero. Folding is skipped for division by zero and for
   integer overflow, so program behavior never changes.
 - Every change is recorded as a step with a before/after line and an explanation.
+
+## Educational target code notes (added in Phase 10)
+- The target is pseudo-assembly for an imaginary register machine. It is NOT executable machine code.
+- Registers are R1, R2, ... (unlimited). Variables are in memory, written [a]. Constants are written #10.
+- Each TAC temporary gets one register, in order of first use.
+- Opcodes depend on the result type: ADD/FADD, SUB/FSUB, MUL/FMUL, DIV/FDIV, NEG/FNEG, CONCAT, CMPxx.
+- Every target line records the TAC instruction it came from.
+- Not implemented: register reuse, instruction scheduling, real machine encodings.
