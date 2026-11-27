@@ -19,3 +19,12 @@ export const authLimiter = rateLimit({
   legacyHeaders: false,
   message,
 });
+
+// Compiling uses CPU, so it gets its own, tighter limit.
+export const compilerLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message,
+});
