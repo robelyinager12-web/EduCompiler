@@ -1,6 +1,7 @@
 import "dotenv/config";
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
+import { exercises, lessons } from "./seedData";
 
 const prisma = new PrismaClient();
 
@@ -18,31 +19,20 @@ async function main() {
     create: { name: "Administrator", email, passwordHash, role: "ADMIN" },
   });
 
-  const lessons = [
-    {
-      title: "What is a compiler?",
-      description: "The big picture of how source code becomes a program.",
-      content:
-        "A compiler translates source code written by a human into another form, such as machine code. It works in phases: lexical analysis, syntax analysis, semantic analysis, intermediate code, optimization and code generation.",
-      category: "Introduction",
-      difficulty: "BEGINNER" as const,
-    },
-    {
-      title: "Lexical analysis and tokens",
-      description: "How the lexer turns characters into tokens.",
-      content:
-        "The lexer reads source code character by character and groups characters into tokens such as keywords, identifiers, numbers and operators. It ignores whitespace and comments.",
-      category: "Lexical Analysis",
-      difficulty: "BEGINNER" as const,
-    },
-  ];
-
+  // Safe to run again: items are matched by title and only created when missing.
   for (const lesson of lessons) {
     const existing = await prisma.lesson.findFirst({ where: { title: lesson.title } });
     if (!existing) await prisma.lesson.create({ data: lesson });
   }
 
-  console.log(`Seed complete. Admin: ${email}`);
+  for (const exercise of exercises) {
+    const { solution, ...data } = exercise;
+    void solution; // the reference solution is for tests only
+    const existing = await prisma.exercise.findFirst({ where: { title: data.title } });
+    if (!existing) await prisma.exercise.create({ data });
+  }
+
+  console.log(`Seed complete. Admin: ${email}. Lessons: ${lessons.length}. Exercises: ${exercises.length}.`);
 }
 
 main()

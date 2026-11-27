@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CONCEPT_KEYS } from "../services/exerciseChecker";
 import { difficultySchema } from "./lesson.validator";
 
 export const exerciseBodySchema = z.object({
@@ -6,7 +7,7 @@ export const exerciseBodySchema = z.object({
   description: z.string().trim().min(1).max(500),
   instructions: z.string().min(1).max(20000),
   starterCode: z.string().max(20000),
-  expectedConcept: z.string().trim().min(1).max(200),
+  expectedConcept: z.enum(CONCEPT_KEYS),
   difficulty: difficultySchema.default("BEGINNER"),
 });
 

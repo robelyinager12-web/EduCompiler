@@ -177,7 +177,7 @@ describe("admin exercises", () => {
       description: "Spot the type error",
       instructions: "Fix the program.",
       starterCode: 'int a = "x";',
-      expectedConcept: "type mismatch",
+      expectedConcept: "error:type-mismatch",
     };
     db.exercise.create.mockResolvedValue({ id: "e1", ...body });
     const res = await request(app).post("/api/admin/exercises").set(headers).send(body);

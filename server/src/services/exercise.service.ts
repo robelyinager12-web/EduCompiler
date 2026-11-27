@@ -4,6 +4,7 @@ import { toJson } from "../utils/json";
 import { isPrismaCode } from "../utils/prismaErrors";
 import type { ExerciseInput } from "../validators/exercise.validator";
 import { runCompiler } from "./compiler.service";
+import { checkSubmission } from "./exerciseChecker";
 
 // "expectedConcept" is the answer key. Student-facing queries never select it.
 const publicFields = {
@@ -27,15 +28,22 @@ export async function getExercise(id: string) {
   return exercise;
 }
 
-// Phase 13 stores the compile outcome. Phase 15 adds checking against expectedConcept.
+// The answer key is read here, used for checking, and never returned.
 export async function submitExercise(userId: string, exerciseId: string, sourceCode: string) {
   const exercise = await prisma.exercise.findUnique({
     where: { id: exerciseId },
-    select: { id: true },
+    select: { id: true, starterCode: true, expectedConcept: true },
   });
   if (!exercise) throw new ApiError(404, "Exercise not found.");
 
   const compiled = runCompiler(sourceCode, "full");
+  const check = checkSubmission(
+    exercise.expectedConcept,
+    sourceCode,
+    exercise.starterCode,
+    compiled,
+  );
+
   const result = {
     status: compiled.status,
     failedPhase: compiled.failedPhase,
@@ -47,7 +55,9 @@ export async function submitExercise(userId: string, exerciseId: string, sourceC
       line: e.line,
       column: e.column,
     })),
-    conceptChecked: false,
+    conceptChecked: check !== null,
+    passed: check ? check.passed : null,
+    feedback: check ? check.feedback : "Submitted. This exercise has no automatic check.",
   };
 
   return prisma.exerciseSubmission.create({

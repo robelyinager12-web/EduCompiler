@@ -2,18 +2,27 @@ import { prisma } from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 
 export async function getProgress(userId: string) {
-  const [programs, compilations, completed, totalLessons] = await Promise.all([
-    prisma.program.count({ where: { userId } }),
-    prisma.compilationRun.count({ where: { userId } }),
-    prisma.lessonProgress.findMany({ where: { userId }, select: { lessonId: true } }),
-    prisma.lesson.count(),
-  ]);
+  const [programs, compilations, completed, totalLessons, passed, totalExercises] =
+    await Promise.all([
+      prisma.program.count({ where: { userId } }),
+      prisma.compilationRun.count({ where: { userId } }),
+      prisma.lessonProgress.findMany({ where: { userId }, select: { lessonId: true } }),
+      prisma.lesson.count(),
+      prisma.exerciseSubmission.findMany({
+        where: { userId, result: { path: ["passed"], equals: true } },
+        select: { exerciseId: true },
+        distinct: ["exerciseId"],
+      }),
+      prisma.exercise.count(),
+    ]);
 
   return {
     programs,
     compilations,
     completedLessonIds: completed.map((c) => c.lessonId),
     totalLessons,
+    completedExerciseIds: passed.map((p) => p.exerciseId),
+    totalExercises,
   };
 }
 

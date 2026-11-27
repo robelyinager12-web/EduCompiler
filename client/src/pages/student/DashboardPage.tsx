@@ -44,6 +44,7 @@ export default function DashboardPage() {
 
         <Card title="Learning progress">
           <ProgressBar value={completed} max={totalLessons} label="Lessons" />
+          <div className="mt-3"><ProgressBar value={progress.data?.completedExerciseIds.length ?? 0} max={progress.data?.totalExercises ?? 0} label="Exercises" /></div>
           <Link to="/app/lessons" className="mt-3 inline-block text-sm text-indigo-600 hover:underline">
             Continue learning
           </Link>

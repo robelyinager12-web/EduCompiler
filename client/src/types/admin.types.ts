@@ -42,3 +42,9 @@ export interface AdminExercise extends ExerciseInput {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ConceptInfo {
+  key: string;
+  label: string;
+  description: string;
+}

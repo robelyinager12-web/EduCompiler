@@ -31,4 +31,24 @@ export interface Progress {
   compilations: number;
   completedLessonIds: string[];
   totalLessons: number;
+  completedExerciseIds: string[];
+  totalExercises: number;
+}
+
+export interface SubmissionResult {
+  status: "SUCCESS" | "FAILED";
+  failedPhase: string | null;
+  errorCount: number;
+  warningCount: number;
+  errors: { phase: string; message: string; line: number; column: number }[];
+  conceptChecked: boolean;
+  passed: boolean | null;
+  feedback: string;
+}
+
+export interface Submission {
+  id: string;
+  exerciseId: string;
+  submittedAt: string;
+  result: SubmissionResult;
 }

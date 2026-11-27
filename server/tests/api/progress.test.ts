@@ -7,6 +7,8 @@ const db = vi.hoisted(() => ({
   compilationRun: { count: vi.fn() },
   lesson: { count: vi.fn(), findUnique: vi.fn() },
   lessonProgress: { findMany: vi.fn(), upsert: vi.fn(), deleteMany: vi.fn() },
+  exercise: { count: vi.fn() },
+  exerciseSubmission: { findMany: vi.fn() },
 }));
 vi.mock("../../src/config/prisma", () => ({ prisma: db }));
 
@@ -33,12 +35,14 @@ describe("progress", () => {
     expect(res.status).toBe(401);
   });
 
-  it("returns the caller's counts and completed lessons", async () => {
+  it("returns the caller's counts, completed lessons and passed exercises", async () => {
     const headers = asUser();
     db.program.count.mockResolvedValue(3);
     db.compilationRun.count.mockResolvedValue(12);
     db.lessonProgress.findMany.mockResolvedValue([{ lessonId: "l1" }]);
     db.lesson.count.mockResolvedValue(4);
+    db.exerciseSubmission.findMany.mockResolvedValue([{ exerciseId: "e1" }]);
+    db.exercise.count.mockResolvedValue(10);
 
     const res = await request(app).get("/api/progress").set(headers);
     expect(res.status).toBe(200);
@@ -47,8 +51,14 @@ describe("progress", () => {
       compilations: 12,
       completedLessonIds: ["l1"],
       totalLessons: 4,
+      completedExerciseIds: ["e1"],
+      totalExercises: 10,
     });
     expect(db.program.count.mock.calls[0][0].where).toEqual({ userId: "u1" });
+    expect(db.exerciseSubmission.findMany.mock.calls[0][0].where).toEqual({
+      userId: "u1",
+      result: { path: ["passed"], equals: true },
+    });
   });
 
   it("marks a lesson complete for the caller", async () => {

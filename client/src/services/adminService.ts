@@ -1,6 +1,7 @@
 import type {
   AdminExercise,
   AdminStats,
+  ConceptInfo,
   ExerciseInput,
   LessonInput,
   StudentRow,
@@ -54,4 +55,9 @@ export async function updateExercise(id: string, input: ExerciseInput): Promise<
 
 export async function deleteExercise(id: string): Promise<void> {
   await api.delete(`/admin/exercises/${enc(id)}`);
+}
+
+export async function fetchConcepts(): Promise<ConceptInfo[]> {
+  const res = await api.get<ApiResponse<ConceptInfo[]>>("/admin/concepts");
+  return res.data.data;
 }

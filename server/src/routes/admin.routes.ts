@@ -6,6 +6,7 @@ import {
   adminGetExercises,
   adminUpdateExerciseHandler,
 } from "../controllers/exercise.controller";
+import { getConceptsHandler } from "../controllers/concept.controller";
 import { getStatsHandler } from "../controllers/stats.controller";
 import { deleteStudentHandler, getStudents } from "../controllers/user.controller";
 import { requireAuth } from "../middleware/auth.middleware";
@@ -20,6 +21,7 @@ const adminRouter = Router();
 adminRouter.use(requireAuth, requireRole("ADMIN"));
 
 adminRouter.get("/stats", getStatsHandler);
+adminRouter.get("/concepts", getConceptsHandler);
 
 adminRouter.get("/students", getStudents);
 adminRouter.delete("/students/:id", validate(idParamSchema, "params"), deleteStudentHandler);
