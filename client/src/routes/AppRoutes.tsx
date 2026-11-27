@@ -1,11 +1,17 @@
 import { Route, Routes } from "react-router-dom";
-import PlaceholderPage from "../components/common/PlaceholderPage";
 import AdminLayout from "../components/layout/AdminLayout";
 import PublicLayout from "../components/layout/PublicLayout";
 import StudentLayout from "../components/layout/StudentLayout";
+import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
+import ExerciseManagementPage from "../pages/admin/ExerciseManagementPage";
+import LessonManagementPage from "../pages/admin/LessonManagementPage";
+import StatisticsPage from "../pages/admin/StatisticsPage";
+import StudentManagementPage from "../pages/admin/StudentManagementPage";
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import AboutPage from "../pages/public/AboutPage";
+import FeaturesPage from "../pages/public/FeaturesPage";
 import LandingPage from "../pages/public/LandingPage";
 import CompilerWorkspacePage from "../pages/student/CompilerWorkspacePage";
 import DashboardPage from "../pages/student/DashboardPage";
@@ -25,8 +31,8 @@ export default function AppRoutes() {
     <Routes>
       <Route element={<PublicLayout />}>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/about" element={<PlaceholderPage title="About EduCompiler" />} />
-        <Route path="/features" element={<PlaceholderPage title="Compiler features" />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/features" element={<FeaturesPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Route>
@@ -50,11 +56,11 @@ export default function AppRoutes() {
       {/* Administrators only */}
       <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<PlaceholderPage title="Admin dashboard" />} />
-          <Route path="students" element={<PlaceholderPage title="Student management" />} />
-          <Route path="lessons" element={<PlaceholderPage title="Lesson management" />} />
-          <Route path="exercises" element={<PlaceholderPage title="Exercise management" />} />
-          <Route path="stats" element={<PlaceholderPage title="System statistics" />} />
+          <Route index element={<AdminDashboardPage />} />
+          <Route path="students" element={<StudentManagementPage />} />
+          <Route path="lessons" element={<LessonManagementPage />} />
+          <Route path="exercises" element={<ExerciseManagementPage />} />
+          <Route path="stats" element={<StatisticsPage />} />
         </Route>
       </Route>
 

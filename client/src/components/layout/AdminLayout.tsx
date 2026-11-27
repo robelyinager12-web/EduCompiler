@@ -1,4 +1,5 @@
 import { Activity, BookOpen, LayoutDashboard, ListChecks, Users } from "lucide-react";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar, { type SidebarLink } from "./Sidebar";
 import Topbar from "./Topbar";
@@ -12,11 +13,18 @@ const links: SidebarLink[] = [
 ];
 
 export default function AdminLayout() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
-      <Sidebar links={links} subtitle="Administrator" />
+      <Sidebar
+        links={links}
+        subtitle="Administrator"
+        mobileOpen={menuOpen}
+        onClose={() => setMenuOpen(false)}
+      />
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar title="Admin area" />
+        <Topbar title="Admin area" onMenuClick={() => setMenuOpen(true)} />
         <main className="flex-1">
           <Outlet />
         </main>

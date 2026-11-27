@@ -17,11 +17,11 @@ export default function PublicLayout() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
       <header className="border-b border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
-        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+        <nav className="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-2">
           <Link to="/" className="flex items-center gap-2 text-lg font-bold">
             <GraduationCap className="text-indigo-600" /> EduCompiler
           </Link>
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
             {publicLinks.map((link) => (
               <NavLink key={link.to} to={link.to} className={navClass}>
                 {link.label}
