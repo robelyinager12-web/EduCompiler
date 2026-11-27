@@ -1,12 +1,24 @@
 import { Router } from "express";
-import { getExerciseById, getExercises } from "../controllers/exercise.controller";
+import {
+  getExerciseById,
+  getExercises,
+  submitExerciseHandler,
+} from "../controllers/exercise.controller";
+import { requireAuth } from "../middleware/auth.middleware";
 import { validate } from "../middleware/validate.middleware";
 import { idParamSchema } from "../validators/common.validator";
+import { submitBodySchema } from "../validators/exercise.validator";
 
 const exerciseRouter = Router();
 
 exerciseRouter.get("/", getExercises);
 exerciseRouter.get("/:id", validate(idParamSchema, "params"), getExerciseById);
-// Phase 13 adds POST /:id/submit (needs the logged-in user)
+exerciseRouter.post(
+  "/:id/submit",
+  requireAuth,
+  validate(idParamSchema, "params"),
+  validate(submitBodySchema),
+  submitExerciseHandler,
+);
 
 export default exerciseRouter;
