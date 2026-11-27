@@ -7,6 +7,7 @@ import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import LandingPage from "../pages/public/LandingPage";
+import CompilerWorkspacePage from "../pages/student/CompilerWorkspacePage";
 import DashboardPage from "../pages/student/DashboardPage";
 import ExerciseDetailPage from "../pages/student/ExerciseDetailPage";
 import ExercisesPage from "../pages/student/ExercisesPage";
@@ -34,7 +35,7 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route path="/app" element={<StudentLayout />}>
           <Route index element={<DashboardPage />} />
-          <Route path="compiler" element={<PlaceholderPage title="Compiler workspace" />} />
+          <Route path="compiler" element={<CompilerWorkspacePage />} />
           <Route path="lessons" element={<LessonsPage />} />
           <Route path="lessons/:id" element={<LessonDetailPage />} />
           <Route path="exercises" element={<ExercisesPage />} />

@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
     "@tailwindcss/vite": "^4.3.5",
+    "@xyflow/react": "^13.0.3",
     "axios": "^1.21.1",
     "lucide-react": "^1.73.0",
     "react": "^19.3.1",
