@@ -1,0 +1,26 @@
+# Render Blueprint for the EduCompiler API. The client is deployed on Vercel.
+services:
+  - type: web
+    name: educompiler-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install --include=dev && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL # Neon pooled connection string
+        sync: false
+      - key: DIRECT_URL # Neon direct connection string (used by migrations)
+        sync: false
+      - key: CLIENT_URL # the Vercel URL, with no trailing slash
+        sync: false

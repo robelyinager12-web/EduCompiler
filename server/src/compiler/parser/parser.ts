@@ -33,7 +33,20 @@ const COMPARISON_OPS: readonly TokenType[] = [
 ];
 const ADDITIVE_OPS: readonly TokenType[] = [TokenType.PLUS, TokenType.MINUS];
 const MULTIPLICATIVE_OPS: readonly TokenType[] = [TokenType.STAR, TokenType.SLASH];
-
+// Iterative on purpose: a recursive check would overflow on the trees it guards against.
+function exceedsHeight(root: Expression, limit: number): boolean {
+  const stack: [Expression, number][] = [[root, 1]];
+  while (stack.length > 0) {
+    const [node, depth] = stack.pop() as [Expression, number];
+    if (depth > limit) return true;
+    if (node.kind === "Unary") stack.push([node.operand, depth + 1]);
+    else if (node.kind === "Grouping") stack.push([node.expression, depth + 1]);
+    else if (node.kind === "Binary") {
+      stack.push([node.left, depth + 1], [node.right, depth + 1]);
+    }
+  }
+  return false;
+}
 class Parser {
   private readonly tokens: Token[];
   private current = 0;
@@ -164,7 +177,13 @@ class Parser {
 
   // expression → comparison
   private expression(): Expression {
-    return this.comparison();
+    const expr = this.comparison();
+    // "1+1+1+..." is parsed in a loop, so it builds a very deep tree without recursion.
+    // Later phases recurse over the tree, so its height must be limited.
+    if (exceedsHeight(expr, MAX_NESTING)) {
+      throw this.fail("Expression is nested too deeply.", this.previous());
+    }
+    return expr;
   }
 
   // comparison → additive ( ("==" | "!=" | "<" | ">" | "<=" | ">=") additive )*

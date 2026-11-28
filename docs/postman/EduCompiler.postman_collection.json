@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "EduCompiler API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "token", "value": "" }
+  ],
+  "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+  "item": [
+    {
+      "name": "Health",
+      "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/health" }
+    },
+    {
+      "name": "Register",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.collectionVariables.set('token', pm.response.json().data.token);"] } }],
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"name\":\"Test Student\",\"email\":\"student@example.com\",\"password\":\"password123\"}" },
+        "url": "{{baseUrl}}/auth/register"
+      }
+    },
+    {
+      "name": "Login",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.collectionVariables.set('token', pm.response.json().data.token);"] } }],
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"email\":\"student@example.com\",\"password\":\"password123\"}" },
+        "url": "{{baseUrl}}/auth/login"
+      }
+    },
+    { "name": "Current user", "request": { "method": "GET", "url": "{{baseUrl}}/auth/me" } },
+    {
+      "name": "Compile",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"source\":\"int a = 10;\\nint b = 20;\\nprint(a + b);\"}" },
+        "url": "{{baseUrl}}/compiler/compile"
+      }
+    },
+    { "name": "History", "request": { "method": "GET", "url": "{{baseUrl}}/compiler/history" } },
+    {
+      "name": "Create program",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"title\":\"My program\",\"sourceCode\":\"int a = 1;\"}" },
+        "url": "{{baseUrl}}/programs"
+      }
+    },
+    { "name": "List programs", "request": { "method": "GET", "url": "{{baseUrl}}/programs" } },
+    { "name": "List lessons", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/lessons" } },
+    { "name": "List exercises", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/exercises" } }
+  ]
+}
